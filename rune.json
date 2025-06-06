@@ -1,0 +1,68 @@
+{
+    "$schema": "./misc/rune.0.4.x.json",
+    "configs": {
+        "target": "rune",
+        "output": "bin/{config}/{arch}",
+        "test_output": "bin/tests/{profile}",
+        "profile": "release",
+        "test_profile": "test_default",
+        "build_mode": "exe"
+    },
+    "profiles": [
+        {
+            "name": "release",
+            "arch": "windows_amd64",
+            "entry": "src",
+            "build_flags": [
+                "-vet"
+            ]
+        },
+        {
+            "name": "mac",
+            "arch": "darwin_arm64",
+            "entry": "src",
+            "build_flags": [
+                "-vet"
+            ]
+        },
+        {
+            "name": "test_default",
+            "arch": "windows_amd64",
+            "entry": "tests",
+            "build_flags": [
+                "-vet",
+                "--all-packages",
+                "-define:ODIN_TEST_THREADS=1",
+                "-define:ODIN_TEST_PROGRESS_WIDTH=0",
+                "-warnings-as-errors"
+            ]
+        },
+        {
+            "name": "test_linux",
+            "arch": "linux_amd64",
+            "entry": "tests",
+            "build_flags": [
+                "-vet",
+                "--all-packages",
+                "-define:ODIN_TEST_THREADS=1",
+                "-define:ODIN_TEST_PROGRESS_WIDTH=0",
+                "-warnings-as-errors"
+            ]
+        },
+        {
+            "name": "test_macos",
+            "arch": "darwin_arm64",
+            "entry": "tests",
+            "build_flags": [
+                "-vet",
+                "--all-packages",
+                "-define:ODIN_TEST_THREADS=1",
+                "-define:ODIN_TEST_PROGRESS_WIDTH=0",
+                "-warnings-as-errors"
+            ]
+        }
+    ],
+    "scripts": {
+        "clean": "py ./scripts/clean.py"
+    }
+}

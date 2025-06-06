@@ -1,0 +1,44 @@
+{
+	"$schema": "../misc/rune.0.4.x.json",
+	"configs": {
+		"target": "example",
+		"output": "bin/{config}/{arch}",
+		"profile": "default",
+		"test_profile": "test_default",
+		"test_output": "bin/tests/{profile}"
+	},
+	"profiles": [
+		{
+			"name": "default",
+			"arch": "windows_amd64",
+			"entry": "src",
+			"build_flags": [
+				"-vet",
+				"-debug"
+			],
+			"pre_build": {
+				"scripts": [
+					"print_before"
+				]
+			},
+			"post_build": {
+				"copy": [
+					{ "from": "assets", "to": "assets" }
+				],
+				"scripts": [
+					"print_after"
+				]
+			}
+		},
+		{
+			"name": "test_default",
+			"arch": "windows_amd64",
+			"entry": "tests"
+		}
+	],
+	"scripts": {
+		"clean": "py ./scripts/clean.py",
+		"print_before": "powershell echo \"Hello before\"",
+		"print_after": "powershell echo \"Hello after\""
+	}
+}
