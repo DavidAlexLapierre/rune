@@ -29,9 +29,11 @@ execute_script_with_logs :: proc(sys: System, script: string) -> string {
 
     stdout_r, stdout_w, _ := sys.process.pipe()
     stderr_r, stderr_w, _ := sys.process.pipe()
+    stdin_r, stdin_w, _ := sys.process.pipe()
 
     defer sys.fs.close(stderr_r)
     defer sys.fs.close(stdout_r)
+    defer sys.fs.close(stdin_w)
 
     t: ^thread.Thread
     done := false
@@ -45,7 +47,7 @@ execute_script_with_logs :: proc(sys: System, script: string) -> string {
         command = cmds,
         stdout = stdout_w,
         stderr = stderr_w,
-        stdin = stdout_r,
+        stdin = stdin_r,
     })
 
     t = thread.create_and_start_with_poly_data(&data, get_logs_from_process)
