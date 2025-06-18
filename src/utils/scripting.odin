@@ -29,7 +29,6 @@ execute_script_with_logs :: proc(sys: System, script: string) -> string {
         cmds = { "bash", "-i", "-c", script }
     } else {
         cmds = strings.split(script, " ")
-        defer delete(cmds)
     }
 
     stdout_r, stdout_w, _ := sys.process.pipe()
@@ -59,6 +58,10 @@ execute_script_with_logs :: proc(sys: System, script: string) -> string {
 
     state, process_err := sys.process.process_wait(p)
     _ = sys.process.process_close(p)
+
+    if ODIN_OS != .Linux {
+        delete(cmds)
+    }
 
     if process_err != nil {
         thread.join(t)
