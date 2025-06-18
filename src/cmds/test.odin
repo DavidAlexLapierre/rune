@@ -21,7 +21,6 @@ import "../utils"
 // Returns:
 // - A success message or an error message if validation or execution fails.
 process_test :: proc(sys: utils.System, args: []string, schema: utils.Schema) -> string {
-    // Determine the profile to use for testing (default or passed as argument)
     profile_name := len(args) > 1 && !strings.starts_with(args[1], "-") ? args[1] : schema.configs.test_profile
     profile, profile_ok := utils.get_profile(schema, profile_name)
     if !profile_ok {
@@ -33,7 +32,6 @@ process_test :: proc(sys: utils.System, args: []string, schema: utils.Schema) ->
     }
 
     if len(args) >= 2 {
-        // Process any flags (test names or file targets) provided in the arguments
         file_parse_err := parse_file_flag(args[1:], &profile)
         if file_parse_err != "" {
             return file_parse_err
@@ -57,7 +55,6 @@ process_test :: proc(sys: utils.System, args: []string, schema: utils.Schema) ->
         delete(profile.flags)
     }
 
-    // Execute the test profile
     err := utils.process_profile(sys, profile, schema, "test")
     if err != "" {
         return err
@@ -78,7 +75,6 @@ process_test :: proc(sys: utils.System, args: []string, schema: utils.Schema) ->
 @(private="file")
 parse_file_flag :: proc(args: []string, profile: ^utils.SchemaProfile) -> (string) {
     for arg in args {
-        // Handle the -f flag for file specification
         if strings.starts_with(arg, "-f") {
             args_arr := strings.split(arg, ":")
             defer delete(args_arr)
@@ -86,7 +82,6 @@ parse_file_flag :: proc(args: []string, profile: ^utils.SchemaProfile) -> (strin
                 return fmt.aprintf("Invalid file flag %s. Make sure it is formatted -f:<file_name>", arg)
             }
 
-            // Update the profile's entry with the specified file
             profile.entry = args_arr[1]
             _, append_err := append(&profile.flags, strings.clone("-file"))
             if append_err != nil {
@@ -110,7 +105,6 @@ parse_file_flag :: proc(args: []string, profile: ^utils.SchemaProfile) -> (strin
 @(private="file")
 parse_package_flag :: proc(args: []string, profile: ^utils.SchemaProfile) -> (string) {
     for arg in args {
-        // Handle the -f flag for file specification
         if strings.starts_with(arg, "-p") {
             args_arr := strings.split(arg, ":")
             defer delete(args_arr)
@@ -118,7 +112,6 @@ parse_package_flag :: proc(args: []string, profile: ^utils.SchemaProfile) -> (st
                 return fmt.aprintf("Invalid package flag %s. Make sure it is formatted -p:<package_name>", arg)
             }
 
-            // Update the profile's entry with the specified file
             profile.entry = args_arr[1]
         }
     }
@@ -144,7 +137,6 @@ parse_test_flag :: proc(args: []string, profile: ^utils.SchemaProfile) -> (strin
                 return fmt.aprintf("Invalid test name flag %s. Make sure it is formatted -t:<test_name>", arg)
             }
 
-            // Define the test names to run by adding a define flag
             new_flag := fmt.aprintf("-define:ODIN_TEST_NAMES=%s", args_arr[1])
             defer delete(new_flag)
             _, append_err := append(&profile.flags, strings.clone(new_flag))
