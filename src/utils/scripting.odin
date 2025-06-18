@@ -24,8 +24,13 @@ T_Data :: struct {
 // - A string containing the standard output from the script.
 // - A string containing the standard error from the script.
 execute_script_with_logs :: proc(sys: System, script: string) -> string {
-    cmds := strings.split(script, " ")
-    defer delete(cmds)
+    cmds: []string
+    if ODIN_OS == .Linux {
+        cmds = { "bash", "-i", "-c", script }
+    } else {
+        cmds = strings.split(script, " ")
+        defer delete(cmds)
+    }
 
     stdout_r, stdout_w, _ := sys.process.pipe()
     stderr_r, stderr_w, _ := sys.process.pipe()

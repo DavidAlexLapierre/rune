@@ -26,6 +26,14 @@
             ]
         },
         {
+            "name": "linux",
+            "arch": "linux_amd64",
+            "entry": "src",
+            "build_flags": [
+                "-vet"
+            ]
+        },
+        {
             "name": "test_default",
             "arch": "windows_amd64",
             "entry": "tests",
