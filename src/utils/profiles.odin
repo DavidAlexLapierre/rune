@@ -43,7 +43,7 @@ process_profile:: proc(
     cmd: string
 ) -> string {
 
-    output := parse_output(schema.configs, profile, cmd)
+    output := parse_output(profile, cmd)
     defer delete(output)
 
     output_err := create_output(sys, output)
@@ -56,7 +56,7 @@ process_profile:: proc(
         return fmt.aprintf("Failed to get extension for %s", profile.arch)
     }
 
-    output_w_target, _ := strings.concatenate({output, schema.configs.target, ext})
+    output_w_target, _ := strings.concatenate({output, profile.target, ext})
     defer delete(output_w_target)
 
     err := process_odin_cmd(sys, profile, schema.scripts, output_w_target, cmd)
@@ -77,11 +77,10 @@ process_profile:: proc(
 // Returns:
 // - string: The parsed output path, with placeholders like "{config}", "{arch}", and "{profile}" replaced.
 @(private="file")
-parse_output :: proc(configs: SchemaConfigs, profile: SchemaProfile, cmd: string) -> string {
+parse_output :: proc(profile: SchemaProfile, cmd: string) -> string {
     is_debug := check_debug(profile.flags)
-    base_output := cmd == "test" ? configs.test_output : configs.output
 
-    output, _ := strings.replace(base_output, "{config}", is_debug ? "debug" : "release", -1)
+    output, _ := strings.replace(profile.output, "{config}", is_debug ? "debug" : "release", -1)
     output, _ = strings.replace(output, "{arch}", profile.arch, -1)
     output, _ = strings.replace(output, "{profile}", profile.name, -1)
     

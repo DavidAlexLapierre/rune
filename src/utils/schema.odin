@@ -5,14 +5,6 @@ CopyAction :: struct {
     from:   string  `json:"from"`
 }
 
-SchemaConfigs :: struct {
-    target:         string  `json:"target"`,
-    output:         string  `json:"output"`,
-    profile:        string  `json:"profile"`,
-    test_profile:   string  `json:"test_profile"`,
-    test_output:    string  `json:test_output`,
-}
-
 SchemaBuildStep :: struct {
     copy:       []CopyAction    `json:"copy"`,
     scripts:    []string        `json:"scripts"`,
@@ -20,6 +12,8 @@ SchemaBuildStep :: struct {
 
 SchemaProfile :: struct {
     name:       string          `json:"name"`,
+    target:     string          `json:"target"`,
+    output:     string          `json:"output"`,
     arch:       string          `json:"arch"`,
     entry:      string          `json:"entry"`,
     flags:      [dynamic]string `json:"build_flags"`,
@@ -31,14 +25,16 @@ SchemaProfile :: struct {
 ExecuteAction :: distinct []string
 
 Schema :: struct {
-    configs:        SchemaConfigs       `json:"configs"`,
-    profiles:       []SchemaProfile     `json:"profiles"`,
-    scripts:        map[string]string   `json:"scripts"`
+    default_profile:        string              `json:"default_profile"`,
+    default_test_profile:   string              `json:"default_test_profile"`,
+    profiles:               []SchemaProfile     `json:"profiles"`,
+    scripts:                map[string]string   `json:"scripts"`
 }
 
-SchemaJon :: struct {
-    schema:         string              `json:"$schema"`,
-    configs:        SchemaConfigs       `json:"configs"`,
-    profiles:       []SchemaProfile     `json:"profiles"`,
-    scripts:        map[string]string   `json:"scripts"`
+SchemaJson :: struct {
+    schema:                 string              `json:"$schema"`,
+    default_profile:        string              `json:"default_profile"`,
+    default_test_profile:   string              `json:"default_test_profile"`,
+    profiles:               []SchemaProfile     `json:"profiles"`,
+    scripts:                map[string]string   `json:"scripts"`
 }

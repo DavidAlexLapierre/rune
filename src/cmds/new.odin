@@ -37,16 +37,14 @@ process_new :: proc(sys: utils.System, args: []string) -> (string, string) {
     }
 
     // Build the initial schema with default profile
-    schema := utils.SchemaJon {
-        schema = "https://raw.githubusercontent.com/DavidAlexLapierre/rune/refs/heads/main/misc/rune.0.4.x.json",
-        configs = {
-            output = "bin/{config}/{arch}",
-            target = target_name,
-            profile = "default"
-        },
+    schema := utils.SchemaJson {
+        schema = "https://raw.githubusercontent.com/DavidAlexLapierre/rune/refs/heads/main/misc/rune.0.5.x.json",
+        default_profile = "default",
         profiles = {
             {
                 name = "default",
+                target = target_name,
+                output = "bin/{config}/{arch}",
                 arch = arch,
                 entry = "src",
                 build_mode = args[1],

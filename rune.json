@@ -1,40 +1,45 @@
 {
-    "$schema": "./misc/rune.0.4.x.json",
-    "configs": {
-        "target": "rune",
-        "output": "bin/{config}/{arch}",
-        "test_output": "bin/tests/{profile}",
-        "profile": "release",
-        "test_profile": "test_default",
-        "build_mode": "exe"
-    },
+    "$schema": "./misc/rune.0.5.x.json",
+    "default_profile": "release",
+    "default_test_profile": "test_default",
     "profiles": [
         {
             "name": "release",
+            "target": "rune",
+            "output": "bin/{config}/{arch}",
             "arch": "windows_amd64",
             "entry": "src",
+            "build_mode": "exe",
             "build_flags": [
                 "-vet"
             ]
         },
         {
             "name": "mac",
+            "target": "rune",
+            "output": "bin/{config}/{arch}",
             "arch": "darwin_arm64",
             "entry": "src",
+            "build_mode": "exe",
             "build_flags": [
                 "-vet"
             ]
         },
         {
             "name": "linux",
+            "target": "rune",
+            "output": "bin/{config}/{arch}",
             "arch": "linux_amd64",
             "entry": "src",
+            "build_mode": "exe",
             "build_flags": [
                 "-vet"
             ]
         },
         {
             "name": "test_default",
+            "target": "test_run",
+            "output": "bin/tests/{arch}",
             "arch": "windows_amd64",
             "entry": "tests",
             "build_flags": [
@@ -47,6 +52,8 @@
         },
         {
             "name": "test_linux",
+            "target": "test_run",
+            "output": "bin/tests/{arch}",
             "arch": "linux_amd64",
             "entry": "tests",
             "build_flags": [
@@ -59,6 +66,8 @@
         },
         {
             "name": "test_macos",
+            "target": "test_run",
+            "output": "bin/tests/{arch}",
             "arch": "darwin_arm64",
             "entry": "tests",
             "build_flags": [
