@@ -1,4 +1,4 @@
-# Rune 🪄
+# Rune
 
 **Rune** is a modular, JSON-based build system tailored for [Odin](https://odin-lang.org/) projects. It lets you define and automate complex builds cleanly and predictably.
 
