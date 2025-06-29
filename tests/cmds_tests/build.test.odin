@@ -24,25 +24,7 @@ should_build_default :: proc(t: ^testing.T) {
         }
     }
 
-    schema := utils.Schema{
-        configs = {
-            output = "mock_output",
-            profile = "default",
-            target = "mock_target"
-        },
-        profiles = {
-            {
-                arch = "windows_amd64",
-                entry = ".",
-                name = "default",
-                build_mode = "exe"
-            }
-        }
-    }
-
-    defer delete(schema.scripts)
-
-    build_success, build_err := cmds.process_build(sys, { "build" }, schema)
+    build_success, build_err := cmds.process_build(sys, { "build" }, mocks.cfg_base)
     defer delete(build_success)
     testing.expect_value(t, build_err, "")
     testing.expect_value(t, build_success, "Build completed")
@@ -64,31 +46,7 @@ should_build_not_default :: proc(t: ^testing.T) {
         }
     }
 
-    schema := utils.Schema{
-        configs = {
-            output = "mock_output",
-            profile = "not_default",
-            target = "mock_target"
-        },
-        profiles = {
-            {
-                arch = "windows_amd64",
-                entry = ".",
-                name = "default",
-                build_mode = "exe"
-            },
-            {
-                arch = "windows_amd64",
-                entry = ".",
-                name = "not_default",
-                build_mode = "exe"
-            }
-        }
-    }
-
-    defer delete(schema.scripts)
-
-    build_success, build_err := cmds.process_build(sys, { "build", "not_default" }, schema)
+    build_success, build_err := cmds.process_build(sys, { "build", "not_default" }, mocks.cfg_base)
     defer delete(build_success)
     testing.expect_value(t, build_err, "")
     testing.expect_value(t, build_success, "Build completed")
@@ -111,21 +69,8 @@ should_fail_profile_not_found :: proc(t: ^testing.T) {
     }
 
     schema := utils.Schema{
-        configs = {
-            output = "mock_output",
-            profile = "not_default",
-            target = "mock_target"
-        },
-        profiles = {
-            {
-                arch = "windows_amd64",
-                entry = ".",
-                name = "default",
-                build_mode = "exe"
-            }
-        }
+        default_profile = "not_exists"
     }
-
     defer delete(schema.scripts)
 
     _, build_err := cmds.process_build(sys, { "build", "not_default" }, schema)
@@ -142,24 +87,7 @@ should_fail_if_create_directory_fails :: proc(t: ^testing.T) {
         }
     }
 
-    schema := utils.Schema{
-        configs = {
-            output = "mock_output",
-            profile = "default",
-            target = "mock_target"
-        },
-        profiles = {
-            {
-                arch = "windows_amd64",
-                entry = ".",
-                name = "default"
-            }
-        }
-    }
-
-    defer delete(schema.scripts)
-
-    _, build_err := cmds.process_build(sys, { "build" }, schema)
+    _, build_err := cmds.process_build(sys, { "build" }, mocks.cfg_base)
     defer delete(build_err)
     testing.expect_value(t, build_err, "Error occurred while trying to create output directory ./mock_output")
 }
@@ -173,26 +101,14 @@ should_fail_if_get_extension_fails :: proc(t: ^testing.T) {
         }
     }
 
-    schema := utils.Schema{
-        configs = {
-            output = "mock_output",
-            profile = "default",
-            target = "mock_target"
-        },
-        profiles = {
-            {
-                arch = "invalid_arch",
-                entry = ".",
-                name = "default"
-            }
-        }
-    }
+    schema := mocks.cfg_base
+    schema.default_profile = "invalid_arch"
 
     defer delete(schema.scripts)
 
     _, build_err := cmds.process_build(sys, { "build" }, schema)
     defer delete(build_err)
-    testing.expect_value(t, build_err, "Failed to get extension for invalid_arch")
+    testing.expect_value(t, build_err, "Failed to get extension for invalid")
 }
 
 @(test)
@@ -211,28 +127,9 @@ should_run_pre_build_scripts :: proc(t: ^testing.T) {
         }
     }
 
-    schema := utils.Schema{
-        configs = {
-            output = "mock_output",
-            profile = "default",
-            target = "mock_target"
-        },
-        profiles = {
-            {
-                arch = "windows_amd64",
-                entry = ".",
-                name = "default",
-                build_mode = "exe",
-                pre_build = {
-                    scripts = {
-                        "test"
-                    }
-                }
-            }
-        },
-        scripts = {
-            "test" = "test"
-        }
+    schema := mocks.cfg_base
+    schema.scripts = {
+        "test" = "test"
     }
 
     defer delete(schema.scripts)
@@ -252,28 +149,14 @@ should_fail_if_invalid_pre_build_script :: proc(t: ^testing.T) {
         }
     }
 
-    schema := utils.Schema{
-        configs = {
-            output = "mock_output",
-            profile = "default",
-            target = "mock_target"
-        },
-        profiles = {
-            {
-                arch = "windows_amd64",
-                entry = ".",
-                name = "default",
-                build_mode = "exe",
-                pre_build = {
-                    scripts = {
-                        "invalid_test"
-                    }
-                }
-            }
-        },
+    schema := mocks.cfg_base
+    schema.profiles[0].pre_build = {
         scripts = {
-            "test" = "test"
+            "invalid_test"
         }
+    }
+    schema.scripts = {
+        "test" = "test"
     }
 
     defer delete(schema.scripts)
@@ -299,28 +182,14 @@ should_fail_if_script_fails :: proc(t: ^testing.T) {
         }
     }
 
-    schema := utils.Schema{
-        configs = {
-            output = "mock_output",
-            profile = "default",
-            target = "mock_target"
-        },
-        profiles = {
-            {
-                arch = "windows_amd64",
-                entry = ".",
-                name = "default",
-                build_mode = "exe",
-                pre_build = {
-                    scripts = {
-                        "test"
-                    }
-                }
-            }
-        },
+    schema := mocks.cfg_base
+    schema.profiles[0].pre_build = {
         scripts = {
-            "test" = "test"
+            "test"
         }
+    }
+    schema.scripts = {
+        "test" = "test"
     }
 
     defer delete(schema.scripts)
@@ -346,28 +215,14 @@ should_run_post_build_scripts :: proc(t: ^testing.T) {
         }
     }
 
-    schema := utils.Schema{
-        configs = {
-            output = "mock_output",
-            profile = "default",
-            target = "mock_target"
-        },
-        profiles = {
-            {
-                arch = "windows_amd64",
-                entry = ".",
-                name = "default",
-                build_mode = "exe",
-                post_build = {
-                    scripts = {
-                        "test"
-                    }
-                }
-            }
-        },
+    schema := mocks.cfg_base
+    schema.profiles[0].post_build = {
         scripts = {
-            "test" = "test"
+            "test"
         }
+    }
+    schema.scripts = {
+        "test" = "test"
     }
 
     defer delete(schema.scripts)
@@ -394,28 +249,14 @@ should_fail_if_invalid_post_build_script :: proc(t: ^testing.T) {
         }
     }
 
-    schema := utils.Schema{
-        configs = {
-            output = "mock_output",
-            profile = "default",
-            target = "mock_target"
-        },
-        profiles = {
-            {
-                arch = "windows_amd64",
-                entry = ".",
-                name = "default",
-                build_mode = "exe",
-                post_build = {
-                    scripts = {
-                        "invalid_test"
-                    }
-                }
-            }
-        },
+    schema := mocks.cfg_base
+    schema.profiles[0].post_build = {
         scripts = {
-            "test" = "test"
+            "invalid_test"
         }
+    }
+    schema.scripts = {
+        "test" = "test"
     }
 
     defer delete(schema.scripts)
@@ -445,28 +286,14 @@ should_copy_files_in_post_build :: proc(t: ^testing.T) {
         }
     }
 
-    schema := utils.Schema{
-        configs = {
-            output = "mock_output",
-            profile = "default",
-            target = "mock_target",
-        },
-        profiles = {
-            {
-                arch = "windows_amd64",
-                entry = ".",
-                name = "default",
-                build_mode = "exe",
-                post_build = {
-                    copy = {
-                        { from = ".", to = "./test"}
-                    }
-                }
-            }
-        },
-        scripts = {
-            "test" = "test"
+    schema := mocks.cfg_base
+    schema.profiles[0].post_build = {
+        copy = {
+            { from = ".", to = "." }
         }
+    }
+    schema.scripts = {
+        "test" = "test"
     }
 
     defer delete(schema.scripts)

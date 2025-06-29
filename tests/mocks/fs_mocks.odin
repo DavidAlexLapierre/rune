@@ -80,11 +80,16 @@ mock_get_executable_directory_UNIX :: proc(allocator := context.allocator) -> st
 
 mock_read_entire_file_from_path_ok :: proc(name: string, alloc: runtime.Allocator) -> ([]byte, os2.Error) {
     schema := utils.Schema {
-        configs = {
-            output = "MOCK_OUTPUT",
-            target = "MOCK_TARGET"
+        default_profile = "default",
+        profiles = {
+            {
+                name = "default",
+                target = "mock_target",
+                output = "mock_output"
+            }
         }
     }
+    defer delete(schema.scripts)
 
     data, _ := json.marshal(schema)
 
@@ -93,15 +98,22 @@ mock_read_entire_file_from_path_ok :: proc(name: string, alloc: runtime.Allocato
 
 mock_read_entire_file_from_path_duplicated_profiles :: proc(name: string, alloc: runtime.Allocator) -> ([]byte, os2.Error) {
     schema := utils.Schema {
-        configs = {
-            output = "MOCK_OUTPUT",
-            target = "MOCK_TARGET"
-        },
+        default_profile = "test",
         profiles = {
-            { name = "test" },
-            { name = "test" }
+            {
+                name = "test",
+                target = "mock_target",
+                output = "mock_output"
+            },
+            {
+                name = "test",
+                target = "mock_target",
+                output = "mock_output"
+            }
         }
     }
+
+    defer delete(schema.scripts)
 
     data, _ := json.marshal(schema)
 
@@ -110,9 +122,13 @@ mock_read_entire_file_from_path_duplicated_profiles :: proc(name: string, alloc:
 
 mock_read_entire_file_from_path_no_output :: proc(name: string, alloc: runtime.Allocator) -> ([]byte, os2.Error) {
     schema := utils.Schema {
-        configs = {
-            output = "",
-            target = "MOCK_TARGET"
+        default_profile = "default",
+        profiles = {
+            {
+                name = "default",
+                output = "",
+                target = "mock_target",
+            }
         }
     }
 
@@ -123,11 +139,17 @@ mock_read_entire_file_from_path_no_output :: proc(name: string, alloc: runtime.A
 
 mock_read_entire_file_from_path_no_target :: proc(name: string, alloc: runtime.Allocator) -> ([]byte, os2.Error) {
     schema := utils.Schema {
-        configs = {
-            output = "MOCK_OUTPUT",
-            target = ""
+        default_profile = "default",
+        profiles = {
+            {
+                name = "default",
+                target = "",
+                output = "."
+            }
         }
     }
+
+    defer delete(schema.scripts)
 
     data, _ := json.marshal(schema)
 
@@ -136,11 +158,17 @@ mock_read_entire_file_from_path_no_target :: proc(name: string, alloc: runtime.A
 
 mock_read_entire_file_from_path_no_build_mode :: proc(name: string, alloc: runtime.Allocator) -> ([]byte, os2.Error) {
     schema := utils.Schema {
-        configs = {
-            output = "MOCK_OUTPUT",
-            target = "MOCK_TARGET"
+        default_profile = "default",
+        profiles = {
+            {
+                name = "default",
+                target = "mock_target",
+                output = "",
+            }
         }
     }
+
+    defer delete(schema.scripts)
 
     data, _ := json.marshal(schema)
 

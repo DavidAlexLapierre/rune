@@ -24,17 +24,14 @@ should_process_tests :: proc(t: ^testing.T) {
     }
 
     schema := utils.Schema {
-        configs = {
-            output = "MOCK_OUTPUT",
-            test_output = "MOCK_OUTPUT",
-            target = "MOCK_TARGET",
-            test_profile = "MOCK_PROFILE"
-        },
+        default_test_profile = "default",
         profiles = {
             {
                 arch = "windows_amd64",
+                output = "mock_output",
+                target = "mock_target",
                 entry = ".",
-                name = "MOCK_PROFILE",
+                name = "default",
                 build_mode = "exe"
             }
         }
@@ -61,17 +58,15 @@ should_process_tests_with_test_flag :: proc(t: ^testing.T) {
     }
 
     schema := utils.Schema {
-        configs = {
-            output = "MOCK_OUTPUT",
-            test_output = "MOCK_OUTPUT",
-            target = "MOCK_TARGET",
-            test_profile = "MOCK_PROFILE"
-        },
+        default_profile = "default",
+        default_test_profile = "default",
         profiles = {
             {
                 arch = "windows_amd64",
                 entry = ".",
-                name = "MOCK_PROFILE",
+                target = "mock_target",
+                output = "mock_output",
+                name = "default",
                 build_mode = "exe"
             }
         }
@@ -98,17 +93,15 @@ should_process_tests_with_package_flag :: proc(t: ^testing.T) {
     }
 
     schema := utils.Schema {
-        configs = {
-            output = "MOCK_OUTPUT",
-            test_output = "MOCK_OUTPUT",
-            target = "MOCK_TARGET",
-            test_profile = "MOCK_PROFILE"
-        },
+        default_profile = "default",
+        default_test_profile = "default",
         profiles = {
             {
+                target = "mock_target",
+                output = "mock_output",
                 arch = "windows_amd64",
                 entry = ".",
-                name = "MOCK_PROFILE",
+                name = "default",
                 build_mode = "exe"
             }
         }
@@ -135,17 +128,14 @@ should_process_tests_with_file_flag :: proc(t: ^testing.T) {
     }
 
     schema := utils.Schema {
-        configs = {
-            output = "MOCK_OUTPUT",
-            test_output = "MOCK_OUTPUT",
-            target = "MOCK_TARGET",
-            test_profile = "MOCK_PROFILE"
-        },
+        default_test_profile = "default",
         profiles = {
             {
+                target = "mock_target",
+                output = "mock_output",
                 arch = "windows_amd64",
                 entry = ".",
-                name = "MOCK_PROFILE"
+                name = "default"
             }
         }
     }
@@ -171,22 +161,21 @@ should_process_test_if_not_default :: proc(t: ^testing.T) {
     }
 
     schema := utils.Schema {
-        configs = {
-            output = "MOCK_OUTPUT",
-            test_output = "MOCK_OUTPUT",
-            target = "MOCK_TARGET",
-            test_profile = "MOCK_PROFILE"
-        },
+        default_test_profile = "default",
         profiles = {
             {
                 arch = "windows_amd64",
                 entry = ".",
+                target = "mock_target",
+                output = "mock_output",
                 name = "MOCK_PROFILE",
                 build_mode = "exe"
             },
             {
                 arch = "windows_amd64",
                 entry = ".",
+                target = "mock_target",
+                output = "mock_output",
                 name = "not_default",
                 build_mode = "exe"
             }
@@ -202,16 +191,13 @@ should_fail_if_profile_not_found :: proc(t: ^testing.T) {
     sys := utils.System {}
 
     schema := utils.Schema {
-        configs = {
-            output = "MOCK_OUTPUT",
-            test_output = "MOCK_OUTPUT",
-            target = "MOCK_TARGET",
-            test_profile = "MOCK_PROFILE"
-        },
+        default_test_profile = "default",
         profiles = {
             {
                 arch = "windows_amd64",
                 entry = ".",
+                target = "mock_target",
+                output = ".",
                 name = "not_default",
                 build_mode = "exe"
             }
@@ -220,7 +206,7 @@ should_fail_if_profile_not_found :: proc(t: ^testing.T) {
 
     res := cmds.process_test(sys, { "test" }, schema)
     defer delete(res)
-    testing.expect_value(t, res, "Profile MOCK_PROFILE does not exists")
+    testing.expect_value(t, res, "Profile default does not exists")
 }
 
 @(test)
@@ -228,16 +214,12 @@ should_fail_if_no_default_profile :: proc(t: ^testing.T) {
     sys := utils.System {}
 
     schema := utils.Schema {
-        configs = {
-            output = "MOCK_OUTPUT",
-            test_output = "MOCK_OUTPUT",
-            target = "MOCK_TARGET",
-            test_profile = ""
-        },
         profiles = {
             {
                 arch = "windows_amd64",
                 entry = ".",
+                target = "mock_target",
+                output = ".",
                 name = "not_default",
                 build_mode = "exe"
             }
@@ -254,17 +236,14 @@ should_fail_if_file_flag_malformed :: proc(t: ^testing.T) {
     sys := utils.System {}
 
     schema := utils.Schema {
-        configs = {
-            output = "MOCK_OUTPUT",
-            test_output = "MOCK_OUTPUT",
-            target = "MOCK_TARGET",
-            test_profile = "MOCK_PROFILE"
-        },
+        default_test_profile = "default",
         profiles = {
             {
                 arch = "windows_amd64",
                 entry = ".",
-                name = "MOCK_PROFILE",
+                name = "default",
+                target = "mock_target",
+                output = ".",
                 build_mode = "exe"
             }
         }
@@ -280,17 +259,14 @@ should_fail_if_test_flag_malformed :: proc(t: ^testing.T) {
     sys := utils.System {}
 
     schema := utils.Schema {
-        configs = {
-            output = "MOCK_OUTPUT",
-            test_output = "MOCK_OUTPUT",
-            target = "MOCK_TARGET",
-            test_profile = "MOCK_PROFILE"
-        },
+        default_test_profile = "default",
         profiles = {
             {
                 arch = "windows_amd64",
                 entry = ".",
-                name = "MOCK_PROFILE",
+                target = "mock_target",
+                output = ".",
+                name = "default",
                 build_mode = "exe"
             }
         }
@@ -306,17 +282,14 @@ should_fail_if_package_flag_malformed :: proc(t: ^testing.T) {
     sys := utils.System {}
 
     schema := utils.Schema {
-        configs = {
-            output = "MOCK_OUTPUT",
-            test_output = "MOCK_OUTPUT",
-            target = "MOCK_TARGET",
-            test_profile = "MOCK_PROFILE"
-        },
+        default_test_profile = "default",
         profiles = {
             {
                 arch = "windows_amd64",
                 entry = ".",
-                name = "MOCK_PROFILE",
+                target = "mock_target",
+                output = ".",
+                name = "default",
                 build_mode = "exe"
             }
         }

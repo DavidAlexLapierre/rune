@@ -21,7 +21,7 @@ import "../utils"
 // Returns:
 // - A success message or an error message if validation or execution fails.
 process_test :: proc(sys: utils.System, args: []string, schema: utils.Schema) -> string {
-    profile_name := len(args) > 1 && !strings.starts_with(args[1], "-") ? args[1] : schema.configs.test_profile
+    profile_name := len(args) > 1 && !strings.starts_with(args[1], "-") ? args[1] : schema.default_test_profile
     profile, profile_ok := utils.get_profile(schema, profile_name)
     if !profile_ok {
         if profile_name != "" {

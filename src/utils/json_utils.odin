@@ -58,28 +58,40 @@ read_root_file :: proc(sys: System) -> (Schema, string) {
 // - A string message indicating success or the error encountered during the operation.
 @(private="file")
 validate_schema :: proc(schema: Schema) -> string {
-    if schema.configs.output == "" {
-        return strings.clone("Invalid schema output")
-    }
-
-    if schema.configs.target == "" {
-        return strings.clone("Invalid schema target")
-    }
-
     // Check for duplicated profiles
     seen_profiles := map[string]bool{}
     defer delete(seen_profiles)
     has_duplicated_profiles := false
+    has_target := true
+    has_output := true
     for profile in schema.profiles {
         if seen_profiles[profile.name] {
             has_duplicated_profiles = true
             break
         }
         seen_profiles[profile.name] = true
+        
+        if profile.target == "" {
+            has_target = false
+            break
+        }
+
+        if profile.output == "" {
+            has_output = false
+            break
+        }
     }
 
     if has_duplicated_profiles {
         return strings.clone("There are duplicated profiles in your rune.json file")
+    }
+
+    if !has_target {
+        return strings.clone("The selected profile does not have a target")
+    }
+
+    if !has_output {
+        return strings.clone("The selected profile does not have an output")
     }
 
     return ""
@@ -97,7 +109,7 @@ validate_schema :: proc(schema: Schema) -> string {
 //
 // Returns:
 // - A string message indicating success or the error encountered during the operation.
-write_root_file :: proc(sys: System, schema: SchemaJon) -> string {
+write_root_file :: proc(sys: System, schema: SchemaJson) -> string {
     path := "./rune.json"
     
     // Check if the file already exists

@@ -13,11 +13,7 @@ should_fail_if_no_default_and_no_args :: proc(t: ^testing.T) {
     sys := utils.System {}
 
     schema := utils.Schema{
-        configs = {
-            output = "mock_output",
-            profile = "",
-            target = "mock_target"
-        }
+        default_profile = "",
     }
 
     _, run_err := cmds.process_run(sys, { "run" }, schema)
@@ -41,23 +37,7 @@ should_run_if_default :: proc(t: ^testing.T) {
         },
     }
 
-    schema := utils.Schema{
-        configs = {
-            output = "mock_output",
-            profile = "default",
-            target = "mock_target"
-        },
-        profiles = {
-            {
-                arch = "windows_amd64",
-                entry = ".",
-                name = "default",
-                build_mode = "exe"
-            }
-        }
-    }
-
-    run_success, run_err := cmds.process_run(sys, { "run" }, schema)
+    run_success, run_err := cmds.process_run(sys, { "run" }, mocks.cfg_base)
     defer delete(run_success)
     testing.expect_value(t, run_err, "")
     testing.expect_value(t, run_success, "Build completed")
@@ -79,23 +59,7 @@ should_run_if_not_default :: proc(t: ^testing.T) {
         },
     }
 
-    schema := utils.Schema{
-        configs = {
-            output = "mock_output",
-            profile = "default",
-            target = "mock_target"
-        },
-        profiles = {
-            {
-                arch = "windows_amd64",
-                entry = ".",
-                name = "not_default",
-                build_mode = "exe"
-            }
-        }
-    }
-
-    run_success, run_err := cmds.process_run(sys, { "run", "not_default" }, schema)
+    run_success, run_err := cmds.process_run(sys, { "run", "not_default" }, mocks.cfg_base)
     defer delete(run_success)
     testing.expect_value(t, run_err, "")
     testing.expect_value(t, run_success, "Build completed")

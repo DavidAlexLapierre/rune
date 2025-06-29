@@ -32,13 +32,13 @@ BuildData :: struct {
 // - err:     An error message string, if something goes wrong.
 process_build :: proc(sys: utils.System, args: []string, schema: utils.Schema) -> (success: string, err: string) {
     // If no default profile is set and no profile is passed in args, return an error
-    if schema.configs.profile == "" && len(args) < 2 {
+    if schema.default_profile == "" && len(args) < 2 {
         err = strings.clone("No default profile was set. Define one or rerun using `rune build [profile]`")
         return "", err
     }
 
     // Get profile name either from the command-line or fallback to default profile
-    profile_name := len(args) > 1 ? args[1] : schema.configs.profile
+    profile_name := len(args) > 1 ? args[1] : schema.default_profile
 
     // Try to retrieve the specified profile from the schema
     profile, profile_ok := utils.get_profile(schema, profile_name)

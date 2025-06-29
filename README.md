@@ -2,16 +2,16 @@
 
 **Rune** is a modular, JSON-based build system tailored for [Odin](https://odin-lang.org/) projects. It lets you define and automate complex builds cleanly and predictably.
 
-## 🔧 Features
+## Features
 
-- 🔍 **Explicit Build Definitions** – Everything lives in `rune.json` file.
-- 🧱 **Multi-profile Support** – Build for multiple architectures easily.
-- ⚙️ **Script Hooks** – Add pre/post build behavior with reusable named scripts.
-- 📦 **Custom Output Paths & Flags** – Fine-tune builds per profile with full control.
+- **Explicit Build Definitions** – Everything lives in `rune.json` file.
+- **Multi-profile Support** – Build for multiple architectures easily.
+- **Script Hooks** – Add pre/post build behavior with reusable named scripts.
+- **Custom Output Paths & Flags** – Fine-tune builds per profile with full control.
 
 ## Installation
 
-To install Rune, you can either download the source code from one of the releases or clone the repository by running ```git clone https://github.com/ametyx/rune.git```. I suggested always picking the latest release since it will have the appropriate version.
+To install Rune, you can either download the source code from one of the releases or clone the repository by running ```git clone https://github.com/DavidAlexLapierre/rune.git```. I suggested always picking the latest release since it will have the appropriate version.
 
 Once you have the source code, run the follow command to build the project in your terminal
 
@@ -23,11 +23,13 @@ Once you have the source code, run the follow command to build the project in yo
 ./scripts/build.sh
 ```
 
-**Note**: Once it's done, either copy the executable to another directory or leave it as is. After, add the path to the location of the executable to your PATH.
+**Warning:** You may need to run the command `chmod +x ./scripts/build.sh` on linux and macos.
+
+**Note**: Once the project is built, either copy the executable to another directory or leave it as is. After that, add the path of the executable to your PATH `{root}/bin/`.
 
 ## Usage
 
-**❓Help**
+**Help**
 
 ```txt
 rune - A build profile tool for the Odin programming language
@@ -72,7 +74,7 @@ Examples:
   rune run                        Run the executable using the default profile
 ```
 
-**✨New**
+**New**
 
 Create a new rune.json file with the given build mode and output target.
 
@@ -87,7 +89,7 @@ rune new exe -o:my_project
 rune new dynamic
 ```
 
-**🛠️Build**
+**Build**
 
 Compile the project using a given profile. Defaults to the profile specified in `configs.profile`.
 
@@ -105,7 +107,7 @@ rune build debug
 rune build release
 ```
 
-**🧪Test**
+**Test**
 
 Run tests given a profile with the option of targeting a specific file or a single test. Defaults
 to the profile specified in `configs.test_profile`.
@@ -130,7 +132,7 @@ rune test -t:name_of_my_test_procedure
 rune test -p:my_package
 ```
 
-**🚀Run**
+**Run**
 
 Compiles and run a project given a profile. Defaults to `configs.profile`. Can only be used for
 executable projects.
