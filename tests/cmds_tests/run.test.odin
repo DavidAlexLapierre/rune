@@ -37,21 +37,7 @@ should_run_if_default :: proc(t: ^testing.T) {
         },
     }
 
-    schema := utils.Schema{
-        default_profile = "default",
-        profiles = {
-            {
-                arch = "windows_amd64",
-                target = "mock_target",
-                output = ".",
-                entry = ".",
-                name = "default",
-                build_mode = "exe"
-            }
-        }
-    }
-
-    run_success, run_err := cmds.process_run(sys, { "run" }, schema)
+    run_success, run_err := cmds.process_run(sys, { "run" }, mocks.cfg_base)
     defer delete(run_success)
     testing.expect_value(t, run_err, "")
     testing.expect_value(t, run_success, "Build completed")
@@ -73,21 +59,7 @@ should_run_if_not_default :: proc(t: ^testing.T) {
         },
     }
 
-    schema := utils.Schema{
-        default_profile = "default",
-        profiles = {
-            {
-                arch = "windows_amd64",
-                target = "mock_target",
-                output = ".",
-                entry = ".",
-                name = "not_default",
-                build_mode = "exe"
-            }
-        }
-    }
-
-    run_success, run_err := cmds.process_run(sys, { "run", "not_default" }, schema)
+    run_success, run_err := cmds.process_run(sys, { "run", "not_default" }, mocks.cfg_base)
     defer delete(run_success)
     testing.expect_value(t, run_err, "")
     testing.expect_value(t, run_success, "Build completed")

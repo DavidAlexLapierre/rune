@@ -16,7 +16,13 @@ should_read_root_file_correctly :: proc(t: ^testing.T) {
         }
     }
 
-    _, err := utils.read_root_file(sys)
+    s, err := utils.read_root_file(sys)
+    defer delete(s.scripts)
+    defer delete(s.profiles[0].name)
+    defer delete(s.profiles[0].target)
+    defer delete(s.profiles[0].output)
+    defer delete(s.profiles)
+    defer delete(s.default_profile)
     testing.expect_value(t, err, "")
 }
 
@@ -29,7 +35,8 @@ should_fail_if_file_exists :: proc(t: ^testing.T) {
         }
     }
 
-    _, err := utils.read_root_file(sys)
+    s, err := utils.read_root_file(sys)
+    defer delete(s.scripts)
     defer delete(err)
     testing.expect_value(t, err, "Rune.json doesn't exists")
 }
@@ -57,7 +64,13 @@ should_fail_if_empty_output :: proc(t: ^testing.T) {
         }
     }
 
-    _, err := utils.read_root_file(sys)
+    s, err := utils.read_root_file(sys)
+    defer delete(s.profiles[0].target)
+    defer delete(s.profiles[0].output)
+    defer delete(s.profiles[0].name)
+    defer delete(s.profiles)
+    defer delete(s.default_profile)
+    defer delete(s.scripts)
     defer delete(err)
     testing.expect_value(t, err, "The selected profile does not have an output")
 }
@@ -71,7 +84,13 @@ should_fail_if_empty_target :: proc(t: ^testing.T) {
         }
     }
 
-    _, err := utils.read_root_file(sys)
+    s, err := utils.read_root_file(sys)
+    defer delete(s.profiles[0].target)
+    defer delete(s.profiles[0].output)
+    defer delete(s.profiles[0].name)
+    defer delete(s.profiles)
+    defer delete(s.default_profile)
+    defer delete(s.scripts)
     defer delete(err)
     testing.expect_value(t, err, "The selected profile does not have a target")
 }
@@ -134,8 +153,13 @@ should_fail_if_schema_has_duplicated_profiles :: proc(t: ^testing.T) {
 
     s, err := utils.read_root_file(sys)
     defer delete(s.profiles[0].name)
+    defer delete(s.profiles[0].target)
+    defer delete(s.profiles[0].output)
     defer delete(s.profiles[1].name)
+    defer delete(s.profiles[1].target)
+    defer delete(s.profiles[1].output)
     defer delete(s.profiles)
+    defer delete(s.default_profile)
     defer delete(err)
     testing.expect_value(t, err, "There are duplicated profiles in your rune.json file")
 }

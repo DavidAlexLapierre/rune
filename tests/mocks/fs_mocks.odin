@@ -83,11 +83,13 @@ mock_read_entire_file_from_path_ok :: proc(name: string, alloc: runtime.Allocato
         default_profile = "default",
         profiles = {
             {
+                name = "default",
                 target = "mock_target",
                 output = "mock_output"
             }
         }
     }
+    defer delete(schema.scripts)
 
     data, _ := json.marshal(schema)
 
@@ -110,6 +112,8 @@ mock_read_entire_file_from_path_duplicated_profiles :: proc(name: string, alloc:
             }
         }
     }
+
+    defer delete(schema.scripts)
 
     data, _ := json.marshal(schema)
 
@@ -145,6 +149,8 @@ mock_read_entire_file_from_path_no_target :: proc(name: string, alloc: runtime.A
         }
     }
 
+    defer delete(schema.scripts)
+
     data, _ := json.marshal(schema)
 
     return data, nil
@@ -161,6 +167,8 @@ mock_read_entire_file_from_path_no_build_mode :: proc(name: string, alloc: runti
             }
         }
     }
+
+    defer delete(schema.scripts)
 
     data, _ := json.marshal(schema)
 

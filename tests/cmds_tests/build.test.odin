@@ -149,26 +149,14 @@ should_fail_if_invalid_pre_build_script :: proc(t: ^testing.T) {
         }
     }
 
-    schema := utils.Schema{
-        default_profile = "default",
-        profiles = {
-            {
-                arch = "windows_amd64",
-                entry = ".",
-                output = ".",
-                target = "mock_target",
-                name = "default",
-                build_mode = "exe",
-                pre_build = {
-                    scripts = {
-                        "invalid_test"
-                    }
-                }
-            }
-        },
+    schema := mocks.cfg_base
+    schema.profiles[0].pre_build = {
         scripts = {
-            "test" = "test"
+            "invalid_test"
         }
+    }
+    schema.scripts = {
+        "test" = "test"
     }
 
     defer delete(schema.scripts)
@@ -194,26 +182,14 @@ should_fail_if_script_fails :: proc(t: ^testing.T) {
         }
     }
 
-    schema := utils.Schema{
-        default_profile = "default",
-        profiles = {
-            {
-                arch = "windows_amd64",
-                entry = ".",
-                output = ".",
-                target = "mock_target",
-                name = "default",
-                build_mode = "exe",
-                pre_build = {
-                    scripts = {
-                        "test"
-                    }
-                }
-            }
-        },
+    schema := mocks.cfg_base
+    schema.profiles[0].pre_build = {
         scripts = {
-            "test" = "test"
+            "test"
         }
+    }
+    schema.scripts = {
+        "test" = "test"
     }
 
     defer delete(schema.scripts)
@@ -239,26 +215,14 @@ should_run_post_build_scripts :: proc(t: ^testing.T) {
         }
     }
 
-    schema := utils.Schema{
-        default_profile = "default",
-        profiles = {
-            {
-                target = "mock_target",
-                output = ".",
-                arch = "windows_amd64",
-                entry = ".",
-                name = "default",
-                build_mode = "exe",
-                post_build = {
-                    scripts = {
-                        "test"
-                    }
-                }
-            }
-        },
+    schema := mocks.cfg_base
+    schema.profiles[0].post_build = {
         scripts = {
-            "test" = "test"
+            "test"
         }
+    }
+    schema.scripts = {
+        "test" = "test"
     }
 
     defer delete(schema.scripts)
@@ -285,26 +249,14 @@ should_fail_if_invalid_post_build_script :: proc(t: ^testing.T) {
         }
     }
 
-    schema := utils.Schema{
-        default_profile = "default",
-        profiles = {
-            {
-                arch = "windows_amd64",
-                entry = ".",
-                target = "mock_target",
-                output = ".",
-                name = "default",
-                build_mode = "exe",
-                post_build = {
-                    scripts = {
-                        "invalid_test"
-                    }
-                }
-            }
-        },
+    schema := mocks.cfg_base
+    schema.profiles[0].post_build = {
         scripts = {
-            "test" = "test"
+            "invalid_test"
         }
+    }
+    schema.scripts = {
+        "test" = "test"
     }
 
     defer delete(schema.scripts)
@@ -334,26 +286,14 @@ should_copy_files_in_post_build :: proc(t: ^testing.T) {
         }
     }
 
-    schema := utils.Schema{
-        default_profile = "default",
-        profiles = {
-            {
-                arch = "windows_amd64",
-                target = "mock_target",
-                output = ".",
-                entry = ".",
-                name = "default",
-                build_mode = "exe",
-                post_build = {
-                    copy = {
-                        { from = ".", to = "./test"}
-                    }
-                }
-            }
-        },
-        scripts = {
-            "test" = "test"
+    schema := mocks.cfg_base
+    schema.profiles[0].post_build = {
+        copy = {
+            { from = ".", to = "." }
         }
+    }
+    schema.scripts = {
+        "test" = "test"
     }
 
     defer delete(schema.scripts)
