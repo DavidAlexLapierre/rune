@@ -177,7 +177,7 @@
         }
     },
     "required": [
-        "defaultProfiles",
+        "default_profile",
         "profiles"
     ]
 }
