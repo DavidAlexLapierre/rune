@@ -188,7 +188,7 @@ rune clean
 
 Rune also comes built-in with a copy action in either the pre or post build step. This means you can easily copy any files or directory before or after your build, which can be useful in scenarios like copying game assets to your release directory.
 
-```json
+```
 profiles: [
   {
     "name": "default",
