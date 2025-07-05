@@ -1,16 +1,12 @@
 {
-	"$schema": "../misc/rune.0.4.x.json",
-	"configs": {
-		"target": "example",
-		"output": "bin/{config}/{arch}",
-		"profile": "default",
-		"test_profile": "test_default",
-		"test_output": "bin/tests/{profile}"
-	},
+	"$schema": "../misc/rune.0.5.x.json",
+	"default_profile": "default",
 	"profiles": [
 		{
 			"name": "default",
 			"arch": "windows_amd64",
+			"target": "example",
+			"output": "bin/{config}/{arch}/",
 			"entry": "src",
 			"build_flags": [
 				"-vet",
@@ -32,6 +28,8 @@
 		},
 		{
 			"name": "test_default",
+			"target": "tests",
+			"output": "bin/tests/",
 			"arch": "windows_amd64",
 			"entry": "tests"
 		}
