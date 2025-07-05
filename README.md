@@ -210,5 +210,5 @@ In this case, `from` looks for directories where `./` is the location if your ru
 - You can use the following values in the output path to dynamically change the path based on the profile
   - `{config}`: Will take the value of release or debug, based on whether the profile has the `--debug` flag.
   - `{arch}`: The architecture used by the profile.
-  - `{profile}`: The name of the profile
-  - E.g: You can use the output `bin/{config}/{arch}/` which could create a `bin/debug/windows_amd64/` output directory
+  - `{profile}`: The name of the profile.
+  - E.g: You can use the output `bin/{config}/{arch}/` which could create a `bin/debug/windows_amd64/` output directory on windows.
