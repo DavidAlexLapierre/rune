@@ -1,13 +1,15 @@
 # Rune
 
-**Rune** is a modular, JSON-based build system tailored for [Odin](https://odin-lang.org/) projects. It lets you define and automate complex builds cleanly and predictably.
+```Disclaimer:``` Rune is still in its early phases. As I'm developing personal projects with it, I am making modifications. As of now, any 0.X version is a breaking change. The breaking changes can be seen in the release's changelog. If the Rune.json schema changes, you may need to upgrade the schema path to use the correct 0.X version.
+
+**Rune** is a profile based build system for [Odin](https://odin-lang.org/) projects. It lets you define and automate build steps and gives you an easy interface to test your projects.
 
 ## Features
 
-- **Explicit Build Definitions** – Everything lives in `rune.json` file.
+- **Explicit Build Definitions** – The profiles and build steps are defined in the `rune.json` file.
 - **Multi-profile Support** – Build for multiple architectures easily.
 - **Script Hooks** – Add pre/post build behavior with reusable named scripts.
-- **Custom Output Paths & Flags** – Fine-tune builds per profile with full control.
+- **Targets, Custom Outputs & Flags** – Each profile has it's own target, output and flags, allowing you to have multiple Odin projects within the same repository.
 
 ## Installation
 
@@ -82,10 +84,10 @@ Create a new rune.json file with the given build mode and output target.
 # Usage
 rune new [build-mode] -o:<target>
 
-# Creates an executable called my_project
+# E.g. Create an executable called my_project
 rune new exe -o:my_project
 
-# Creates a dynamic library with the name of the parent directory
+# E.g. Create a dynamic library with the name of the parent directory
 rune new dynamic
 ```
 
@@ -97,13 +99,13 @@ Compile the project using a given profile. Defaults to the profile specified in 
 # Usage
 rune build [profile?]
 
-# Build the default profile
+# Build the profile set as default
 rune build
 
-# Builds a debug profile
+# E.g. Builds the profile called debug
 rune build debug
 
-# Builds a release profile
+# E.g. Builds the profile called release
 rune build release
 ```
 
@@ -116,19 +118,19 @@ to the profile specified in `configs.test_profile`.
 # Usage
 rune test [profile?] -t:<test_name> -f:<file_name>
 
-# Run the default test profile
+# Run the test profile set as default
 rune test
 
-# Run a specific test profile
+# E.g. Run a specific test profile
 rune test my_test_profile
 
-# Test a specific file
-rune test -f:./path/to/my/file.odin
+# E.g. Test a specific file according to the release profile
+rune test release -f:./path/to/my/file.odin
 
-# Run a specific test
+# E.g. Run a specific test
 rune test -t:name_of_my_test_procedure
 
-# Run a specific package
+# E.g. Run a specific package
 rune test -p:my_package
 ```
 
@@ -141,13 +143,13 @@ executable projects.
 # Usage
 rune run [profile?]
 
-# Runs the default profile
+# Runs the profile set as default
 rune run
 
-# Runs a debug profile
+# E.g. Runs the profile called debug
 rune run debug
 
-# Runs a release profile
+# E.g. Runs profile called release
 rune run release
 ```
 
@@ -166,4 +168,47 @@ directly call it from rune.
 
 # Usage
 rune clean
+
+# You can also add scripts to pre and post build steps
+# ...
+# profiles: [
+#   {
+#     "name": "default",
+#     ...
+#     "post_build": {
+#       "scripts": [
+#         "clean"
+#       ]
+#     }
+#   }
+#]
 ```
+
+**Copy action**
+
+Rune also comes built-in with a copy action in either the pre or post build step. This means you can easily copy any files or directory before or after your build, which can be useful in scenarios like copying game assets to your release directory.
+
+```json
+profiles: [
+  {
+    "name": "default",
+    "output": "bin/{config}/{arch}/"
+    ...
+    "pre_build": {
+      "copy": [
+        { "from": "assets/", "to": "assets/" }
+      ]
+    }
+  }
+]
+```
+
+In this case, `from` looks for directories where `./` is the location if your rune.json and `to` points the output directory specified in your profile. In the example above, the assets located in `{root}/assets/` would be copied to `{root}/bin/{config}/{arch}/assets/`.
+
+## Misc information
+
+- You can use the following values in the output path to dynamically change the path based on the profile
+  - `{config}`: Will take the value of release or debug, based on whether the profile has the `--debug` flag.
+  - `{arch}`: The architecture used by the profile.
+  - `{profile}`: The name of the profile
+  - E.g: You can use the output `bin/{config}/{arch}/` which could create a `bin/debug/windows_amd64/` output directory
