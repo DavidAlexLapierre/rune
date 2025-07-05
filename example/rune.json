@@ -1,6 +1,7 @@
 {
 	"$schema": "../misc/rune.0.5.x.json",
 	"default_profile": "default",
+	"default_test_profile": "test_default",
 	"profiles": [
 		{
 			"name": "default",
