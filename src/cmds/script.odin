@@ -20,7 +20,6 @@ import "../utils"
 // - success: A success message string, if the script completes successfully.
 // - err:     An error message string, if something goes wrong.
 process_script :: proc(sys: utils.System, args: []string, schema: utils.Schema) -> (string, string) {
-    // Try to match the argument to a defined script
     script: string
     for key in schema.scripts {
         if key == args[0] {
@@ -29,15 +28,12 @@ process_script :: proc(sys: utils.System, args: []string, schema: utils.Schema) 
         }
     }
 
-    // If no script matched, return an error
     if script == "" {
         return "", fmt.aprintf("Script %s doesn't exists", args[0])
     }
 
-    // Run the script using the utility shell processor
     script_err := utils.execute_script_with_logs(sys, script)
 
-    // If the script had an error, return that
     if script_err != "" {
         return "", script_err
     }

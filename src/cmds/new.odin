@@ -19,13 +19,11 @@ import "../utils"
 // - A success message if the file is created successfully.
 // - An error message if validation fails or file writing encounters an issue.
 process_new :: proc(sys: utils.System, args: []string) -> (string, string) {
-    // Ensure a valid build mode is provided
     build_mode_err := validate_build_mode(args)
     if build_mode_err != "" {
         return "", build_mode_err
     }
 
-    // Construct architecture string from ODIN_OS and ODIN_ARCH
     arch_raw := fmt.aprintf("%s_%s", ODIN_OS, ODIN_ARCH)
     arch := strings.to_lower(arch_raw)
     delete(arch_raw)
@@ -36,7 +34,6 @@ process_new :: proc(sys: utils.System, args: []string) -> (string, string) {
         return "", target_err
     }
 
-    // Build the initial schema with default profile
     schema := utils.SchemaJson {
         schema = "https://raw.githubusercontent.com/teewaa/rune/refs/heads/main/misc/rune.0.5.x.json",
         default_profile = "default",
@@ -52,7 +49,6 @@ process_new :: proc(sys: utils.System, args: []string) -> (string, string) {
         }
     }
 
-    // Write schema to rune.json in the root of the project
     write_err := utils.write_root_file(sys, schema)
     if write_err != "" {
         return "", write_err
@@ -86,7 +82,6 @@ parse_output_flag :: proc(sys: utils.System, args: []string) -> (string, string)
         }
     }
 
-    // If there's no -o:<target_name> flag, we get the directory name
     full_path := sys.fs.get_current_directory()
 
     dirs: []string

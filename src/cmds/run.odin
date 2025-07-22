@@ -21,18 +21,15 @@ import "../utils"
 // - success: A message indicating a successful build or script execution.
 // - err:     An error string if execution fails at any stage.
 process_run :: proc(sys: utils.System, args: []string, schema: utils.Schema) -> (success: string, err: string) {
-    // If no profile is configured and no argument is passed, we can't run anything
     if schema.default_profile == "" && len(args) < 2 {
         return "", strings.clone("Run script not found")
     }
 
-    // If a default profile exists and no specific target was passed, run it as a build
     if schema.default_profile != "" && len(args) < 2 {
         build_success, build_err := process_build(sys, args, schema)
         return build_success, build_err
     }
 
-    // Try to match a passed argument to a profile by name
     profile: string
     if schema.default_profile != "" && len(args) >= 2 {
         for p in schema.profiles {
@@ -43,7 +40,6 @@ process_run :: proc(sys: utils.System, args: []string, schema: utils.Schema) -> 
         }
     }
 
-    // If we matched a profile, build it
     if profile != "" {
         build_success, build_err := process_build(sys, args, schema)
         return build_success, build_err

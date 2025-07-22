@@ -46,8 +46,6 @@ process_odin_cmd :: proc(
     output: string,
     cmd: string
 ) -> (string) {
-
-    // Execute pre-build scripts if any are defined
     if len(profile.pre_build.copy) > 0 || len(profile.pre_build.scripts) > 0 {
         pre_build_err := execute_build_sequence(sys, profile.pre_build, scripts, output)
 
@@ -56,7 +54,6 @@ process_odin_cmd :: proc(
         }
     }
 
-    // Execute the build command
     cmd_err := execute_cmd(sys, BuildData{
         entry = profile.entry,
         output = output,
@@ -69,7 +66,6 @@ process_odin_cmd :: proc(
         return cmd_err
     }
 
-    // Execute post-build actions such as file copying and additional scripts
     if len(profile.post_build.copy) > 0 || len(profile.post_build.scripts) > 0 {
         post_build_err := execute_build_sequence(sys, profile.post_build, scripts, output)
 
@@ -99,14 +95,12 @@ execute_cmd :: proc(sys: System, data: BuildData, build_cmd: string) -> string {
     cmd, _ := strings.join({"odin", build_cmd}, " ")
     defer delete(cmd)
 
-    // Append the entry point to the command if it's specified
     if data.entry != "" {
         new_cmd, _ := strings.join({cmd, data.entry}, " ")
         delete(cmd)
         cmd = new_cmd
     }
 
-    // Append the output path to the command if it's specified
     if data.output != "" {
         out := fmt.aprintf("-out:%s", data.output)
         new_cmd, _ := strings.join({cmd, out}, " ")
@@ -123,7 +117,6 @@ execute_cmd :: proc(sys: System, data: BuildData, build_cmd: string) -> string {
         cmd = new_cmd
     }
 
-    // Append the architecture to the command if it's specified
     if data.arch != "" {
         out := fmt.aprintf("-target:%s", data.arch)
         new_cmd, _ := strings.join({cmd, out}, " ")
@@ -132,7 +125,6 @@ execute_cmd :: proc(sys: System, data: BuildData, build_cmd: string) -> string {
         cmd = new_cmd
     }
     
-    // Append any additional flags to the command
     if len(data.flags) > 0 {
         for flag in data.flags {
             new_cmd, _ := strings.join({cmd, flag}, " ")
@@ -141,10 +133,11 @@ execute_cmd :: proc(sys: System, data: BuildData, build_cmd: string) -> string {
         }
     }
 
-    logger.info(cmd) // Log the final command to be executed
-    logger.info()
+    if sys.verbose {
+        logger.info(cmd)
+        logger.info()
+    }
 
-    // Execute the command and handle any output or error
     script_err := execute_script_with_logs(sys, cmd)
 
     if script_err != "" {
@@ -168,7 +161,6 @@ execute_cmd :: proc(sys: System, data: BuildData, build_cmd: string) -> string {
 // - A string containing any error message, or an empty string if successful.
 @(private="file")
 execute_build_sequence :: proc(sys: System, steps: SchemaBuildStep, script_list: map[string]string, output: string) -> string {
-    // Execute any file copy operations
     for copy in steps.copy {
         output_dir := filepath.dir(output)
         defer delete(output_dir)
@@ -180,7 +172,6 @@ execute_build_sequence :: proc(sys: System, steps: SchemaBuildStep, script_list:
         }
     }
 
-    // Execute any sequence scripts
     script_err := execute_scripts(sys, steps.scripts, script_list)
     if script_err != "" {
         return script_err
