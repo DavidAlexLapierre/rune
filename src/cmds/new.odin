@@ -3,7 +3,7 @@ package cmds
 import "core:fmt"
 import "core:strings"
 
-import "../utils"
+import "rune:utils"
 
 
 // process_new handles the `rune new [build_mode] [target]` command.

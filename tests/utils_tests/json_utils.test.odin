@@ -3,8 +3,8 @@ package utils_tests
 
 import "core:testing"
 
-import "../mocks"
-import "../../src/utils"
+import "tests:mocks"
+import "rune:utils"
 
 
 @(test)

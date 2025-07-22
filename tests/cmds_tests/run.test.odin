@@ -3,9 +3,9 @@ package cmds_tests
 
 import "core:testing"
 
-import "../mocks"
-import "../../src/cmds"
-import "../../src/utils"
+import "tests:mocks"
+import "rune:cmds"
+import "rune:utils"
 
 
 @(test)

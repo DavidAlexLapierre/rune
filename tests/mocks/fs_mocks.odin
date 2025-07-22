@@ -5,7 +5,7 @@ import "base:runtime"
 import "core:os/os2"
 import "core:encoding/json"
 
-import "../../src/utils"
+import "rune:utils"
 
 
 err_msg := "MOCK_ERROR"

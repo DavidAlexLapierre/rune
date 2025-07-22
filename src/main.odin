@@ -7,9 +7,9 @@ import "core:os/os2"
 import "core:strings"
 import "core:time"
 
-import "cmds"
-import "logger"
-import "utils"
+import "rune:cmds"
+import "rune:logger"
+import "rune:utils"
 
 
 VERSION :: #config(VERSION, "dev")
@@ -93,5 +93,7 @@ main :: proc() {
 }
 
 is_verbose :: proc() -> bool {
+
+    
     return false
 }

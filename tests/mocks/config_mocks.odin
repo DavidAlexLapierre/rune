@@ -1,6 +1,6 @@
 package mocks
 
-import "../../src/utils"
+import "rune:utils"
 
 cfg_base :: utils.Schema {
 	default_profile      = "default",

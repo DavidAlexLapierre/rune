@@ -3,7 +3,7 @@ package cmds
 import "core:fmt"
 import "core:strings"
 
-import "../utils"
+import "rune:utils"
 
 
 // BuildData holds build-specific metadata such as entry file, output path,

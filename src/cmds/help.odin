@@ -1,6 +1,6 @@
 package cmds
 
-import "../logger"
+import "rune:logger"
 
 
 // print_help outputs the usage and available commands for the `rune` CLI tool.

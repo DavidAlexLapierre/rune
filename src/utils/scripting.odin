@@ -5,7 +5,7 @@ import "core:strings"
 import "core:os/os2"
 import "core:thread"
 
-import "../logger"
+import "rune:logger"
 
 
 T_Data :: struct {

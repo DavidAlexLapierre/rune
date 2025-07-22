@@ -3,7 +3,7 @@ package cmds
 import "core:fmt"
 import "core:strings"
 
-import "../utils"
+import "rune:utils"
 
 
 // process_run handles the `rune run [profile | script]` command.

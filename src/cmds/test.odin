@@ -3,7 +3,7 @@ package cmds
 import "core:fmt"
 import "core:strings"
 
-import "../utils"
+import "rune:utils"
 
 
 // process_test handles the `rune test [profile?] [-t:test_name] [-f:file_name]` command.
