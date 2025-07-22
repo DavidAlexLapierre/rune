@@ -6,5 +6,9 @@
     "profile": "default",
     "profiles": [
         { "name": "default", "checker_path": ["src", "tests"] }
+    ],
+    "collections": [
+        { "name": "rune", "path": "./src/" },
+        { "name": "tests", "path": "./tests/" }
     ]
 }

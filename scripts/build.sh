@@ -13,4 +13,4 @@ mkdir -p "bin"
 
 # Run the build
 echo "Building Rune version $VERSION"
-odin build "src" -out:"bin/rune" -define:VERSION="$VERSION"
+odin build "src" -out:"bin/rune" -collection:rune=src/ -define:VERSION="$VERSION"

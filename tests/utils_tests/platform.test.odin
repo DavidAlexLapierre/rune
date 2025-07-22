@@ -3,7 +3,7 @@ package utils_tests
 import "core:fmt"
 import "core:testing"
 
-import "../../src/utils"
+import "rune:utils"
 
 
 @(test)

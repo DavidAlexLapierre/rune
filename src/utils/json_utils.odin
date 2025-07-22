@@ -20,19 +20,16 @@ import "core:strings"
 read_root_file :: proc(sys: System) -> (Schema, string) {
     rune_file := "./rune.json"
 
-    // Check if the file exists
     if !sys.fs.exists(rune_file) {
         return {}, strings.clone("Rune.json doesn't exists")
     }
 
-    // Attempt to read the file's content
     data, read_err := sys.fs.read_entire_file_from_path(rune_file, context.allocator)
     defer delete(data)
     if read_err != nil {
         return {}, strings.clone("Failed to read rune.json")
     }
 
-    // Unmarshal the JSON data into the schema
     schema: Schema
     unmarshal_err := json.unmarshal(data, &schema)
     if unmarshal_err != nil {
@@ -58,7 +55,6 @@ read_root_file :: proc(sys: System) -> (Schema, string) {
 // - A string message indicating success or the error encountered during the operation.
 @(private="file")
 validate_schema :: proc(schema: Schema) -> string {
-    // Check for duplicated profiles
     seen_profiles := map[string]bool{}
     defer delete(seen_profiles)
     has_duplicated_profiles := false
@@ -111,20 +107,16 @@ validate_schema :: proc(schema: Schema) -> string {
 // - A string message indicating success or the error encountered during the operation.
 write_root_file :: proc(sys: System, schema: SchemaJson) -> string {
     path := "./rune.json"
-    
-    // Check if the file already exists
     if sys.fs.exists(path) {
         return strings.clone("File rune.json already exists")
     }
 
-    // Marshal the schema to JSON format
     json_data, err := json.marshal(schema, { pretty = true, use_enum_names = true })
     defer delete(json_data)
     if err != nil {
         return fmt.aprintf("Failed to create rune.json:\n%s", err)
     }
 
-    // Write the JSON data to the file
     werr := sys.fs.write_entire_file(path, json_data)
     if werr != nil {
         return fmt.aprintf("Failed to write schema to rune.json: %s", werr)

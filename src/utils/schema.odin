@@ -31,10 +31,17 @@ Schema :: struct {
     scripts:                map[string]string   `json:"scripts"`
 }
 
+SchemaJsonProfile :: struct {
+    name:       string          `json:"name"`,
+    target:     string          `json:"target"`,
+    output:     string          `json:"output"`,
+    arch:       string          `json:"arch"`,
+    entry:      string          `json:"entry"`,
+    build_mode: string          `json:"build_mode"`,
+}
+
 SchemaJson :: struct {
     schema:                 string              `json:"$schema"`,
     default_profile:        string              `json:"default_profile"`,
-    default_test_profile:   string              `json:"default_test_profile"`,
-    profiles:               []SchemaProfile     `json:"profiles"`,
-    scripts:                map[string]string   `json:"scripts"`
+    profiles:               []SchemaJsonProfile     `json:"profiles"`,
 }

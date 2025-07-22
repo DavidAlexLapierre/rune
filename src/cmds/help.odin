@@ -1,6 +1,6 @@
 package cmds
 
-import "../logger"
+import "rune:logger"
 
 
 // print_help outputs the usage and available commands for the `rune` CLI tool.
@@ -41,8 +41,9 @@ print_help :: proc() {
     logger.info("                                  Example: rune clean");
     logger.info("                                           rune deploy");
     logger.info("")
-    logger.info("  -v, --version                   Print the version of rune.");
-    logger.info("  -h, --help                      Show this help message.");
+    logger.info("  version                         Prints the version of rune.");
+    logger.info("  -h, --help                      Prints this help message.");
+    logger.info("  -v, --version                   Prints the command being ran.");
     logger.info("");
     logger.info("Project files:");
     logger.info("  rune.json                       Defines profiles, default profile, and scripts for the project.");

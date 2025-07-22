@@ -18,7 +18,6 @@ YELLOW := "\033[33m"  // Yellow color for warnings
 // Parameters:
 // - msg: The error message to print.
 error :: proc(msg: string) {
-    // Format the message with red color and reset formatting after
     print_msg := fmt.aprintf("%s%s%s", RED, msg, RESET)
     fmt.eprintln(print_msg)
     delete(print_msg)
@@ -29,7 +28,6 @@ error :: proc(msg: string) {
 // Parameters:
 // - msg: The warning message to print.
 warn :: proc(msg: string) {
-    // Format the message with yellow color and reset formatting after
     print_msg := fmt.aprintf("%s%s%s", YELLOW, msg, RESET)
     fmt.eprintln(print_msg)
     delete(print_msg)
@@ -40,7 +38,6 @@ warn :: proc(msg: string) {
 // Parameters:
 // - msg: The success message to print.
 success :: proc(msg: string) {
-    // Format the message with green color and reset formatting after
     print_msg := fmt.aprintf("%s%s%s", GREEN, msg, RESET)
     fmt.println(print_msg)
     delete(print_msg)
@@ -67,7 +64,6 @@ infosl :: proc(msg: string = "") {
 // Parameters:
 // - msg: The success message to print.
 successsl :: proc(msg: string) {
-    // Format the message with green color and reset formatting after
     print_msg := fmt.aprintf("%s%s%s", GREEN, msg, RESET)
     fmt.print(print_msg)
     delete(print_msg)
@@ -78,7 +74,6 @@ successsl :: proc(msg: string) {
 // Parameters:
 // - msg: The warning message to print.
 warnsl :: proc(msg: string) {
-    // Format the message with yellow color and reset formatting after
     print_msg := fmt.aprintf("%s%s%s", YELLOW, msg, RESET)
     fmt.eprint(print_msg)
     delete(print_msg)
@@ -89,7 +84,6 @@ warnsl :: proc(msg: string) {
 // Parameters:
 // - msg: The error message to print.
 errorsl :: proc(msg: string) {
-    // Format the message with red color and reset formatting after
     print_msg := fmt.aprintf("%s%s%s", RED, msg, RESET)
     fmt.eprint(print_msg)
     delete(print_msg)

@@ -2,7 +2,7 @@ package utils
 
 import "core:fmt"
 
-import "../logger"
+import "rune:logger"
 
 
 // Enum containing the different platforms
