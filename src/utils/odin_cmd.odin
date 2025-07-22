@@ -142,6 +142,7 @@ execute_cmd :: proc(sys: System, data: BuildData, build_cmd: string) -> string {
     }
 
     logger.info(cmd) // Log the final command to be executed
+    logger.info()
 
     // Execute the command and handle any output or error
     script_err := execute_script_with_logs(sys, cmd)

@@ -36,7 +36,8 @@ main :: proc() {
             process_close = os2.process_close,
             process_start = os2.process_start,
             process_wait = os2.process_wait
-        }
+        },
+        verbose = is_verbose(),
     }
 
     if len(os2.args) < 2 {
@@ -44,7 +45,7 @@ main :: proc() {
         return
     }
 
-    if os2.args[1] == "-v" || os2.args[1] == "--version" {
+    if os2.args[1] == "version" {
         logger.info(VERSION)
         return
     }
@@ -85,8 +86,12 @@ main :: proc() {
 
     if success != "" && cmd != "run" {
         total_time := time.duration_seconds(time.since(start_time))
-        msg := fmt.aprintf("\n%s: %.3f seconds", success, total_time)
+        msg := fmt.aprintf("%s: %.3f seconds", success, total_time)
         logger.success(msg)
         delete(msg)
     }
+}
+
+is_verbose :: proc() -> bool {
+    return false
 }
