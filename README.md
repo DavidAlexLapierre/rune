@@ -64,8 +64,9 @@ Commands:
                                   Example: rune clean
                                           rune deploy
 
-  -v, --version                   Print the version of rune.
+  version                         Print the version of rune.
   -h, --help                      Show this help message.
+  -v, --verbose                   Shows the command being ran.
 
 Project files:
   rune.json                       Defines profiles, default profile, and scripts for the project.
