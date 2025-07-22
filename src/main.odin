@@ -16,6 +16,11 @@ VERSION :: #config(VERSION, "dev")
 
 
 main :: proc() {
+    if len(os2.args) < 2 {
+        cmds.print_help()
+        return
+    }
+
     start_time := time.now()
 
     sys := utils.System {
@@ -37,12 +42,7 @@ main :: proc() {
             process_start = os2.process_start,
             process_wait = os2.process_wait
         },
-        verbose = is_verbose(),
-    }
-
-    if len(os2.args) < 2 {
-        cmds.print_help()
-        return
+        verbose = is_verbose(os2.args),
     }
 
     if os2.args[1] == "version" {
@@ -92,8 +92,12 @@ main :: proc() {
     }
 }
 
-is_verbose :: proc() -> bool {
-
+is_verbose :: proc(args: []string) -> bool {
+    for i in 0..<len(args) {
+        if args[i] == "-v" || args[i] == "--verbose" {
+            return true
+        }
+    }
     
     return false
 }

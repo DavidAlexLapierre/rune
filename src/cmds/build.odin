@@ -36,7 +36,7 @@ process_build :: proc(sys: utils.System, args: []string, schema: utils.Schema) -
         return "", err
     }
 
-    profile_name := len(args) > 1 ? args[1] : schema.default_profile
+    profile_name := should_get_profile_name(args, sys.verbose) ? args[1] : schema.default_profile
 
     profile, profile_ok := utils.get_profile(schema, profile_name)
     if !profile_ok {
@@ -50,4 +50,8 @@ process_build :: proc(sys: utils.System, args: []string, schema: utils.Schema) -
     }
 
     return strings.clone("Build completed"), ""
+}
+
+should_get_profile_name :: proc(args: []string, is_verbose: bool) -> bool {
+    return len(args) > 1 && !is_verbose || len(args) > 2 && is_verbose
 }

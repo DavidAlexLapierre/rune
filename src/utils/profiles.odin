@@ -15,11 +15,9 @@ import "core:strings"
 // - bool: A flag indicating whether the profile was found.
 get_profile :: proc(schema: Schema, name: string) -> (SchemaProfile, bool) {
     for p in schema.profiles {
-        if p.name != name {
-            continue
+        if p.name == name {
+            return p, true
         }
-
-        return p, true
     }
 
     return {}, false
