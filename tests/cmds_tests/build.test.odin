@@ -193,7 +193,7 @@ should_fail_if_script_fails :: proc(t: ^testing.T) {
     }
 
     defer delete(schema.scripts)
-
+    
     _, build_err := cmds.process_build(sys, { "build" }, schema)
     defer delete(build_err)
     testing.expect_value(t, build_err, "Script test failed with Exist")

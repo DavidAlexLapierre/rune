@@ -33,11 +33,9 @@ execute_script_with_logs :: proc(sys: System, script: string) -> string {
 
     stdout_r, stdout_w, _ := sys.process.pipe()
     stderr_r, stderr_w, _ := sys.process.pipe()
-    stdin_r, stdin_w, _ := sys.process.pipe()
 
     defer sys.fs.close(stderr_r)
     defer sys.fs.close(stdout_r)
-    defer sys.fs.close(stdin_w)
 
     t: ^thread.Thread
     done := false
@@ -51,27 +49,23 @@ execute_script_with_logs :: proc(sys: System, script: string) -> string {
         command = cmds,
         stdout = stdout_w,
         stderr = stderr_w,
-        stdin = stdin_r,
     })
-
-    t = thread.create_and_start_with_poly_data(&data, get_logs_from_process)
-
-    state, process_err := sys.process.process_wait(p)
-    _ = sys.process.process_close(p)
 
     if ODIN_OS != .Linux {
         delete(cmds)
     }
 
+    t = thread.create_and_start_with_poly_data(&data, get_logs_from_process)
+    defer thread.destroy(t)
+
+    state, process_err := sys.process.process_wait(p)
+    _ = sys.process.process_close(p)
+    done = true
+
     if process_err != nil {
-        thread.join(t)
-        thread.destroy(t)
         return fmt.aprintf("Script %s failed with %s", script, process_err)
     }
 
-    done = true
-    thread.join(t)
-    thread.destroy(t)
     sys.fs.close(stdout_w)
     sys.fs.close(stderr_w)
 
