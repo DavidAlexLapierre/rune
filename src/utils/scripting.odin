@@ -116,7 +116,7 @@ get_logs_from_process :: proc(data: ^T_Data) {
             switch err {
             case nil:
                 if n > 0 {
-                    logger.errorsl(string(buf[0:n]))
+                    logger.infosl(string(buf[0:n]))
                 }
             case .EOF, .Broken_Pipe:
                 stderr_done = true
